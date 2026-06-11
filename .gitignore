@@ -1,6 +1,81 @@
-**/node_modules/
-**/dist/
-**/target/
+# Secrets and local environment
 .env
-.DS_Store
+.env.*
+!.env.example
+*.local
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+**/dist/
+target/
+**/target/
+out/
+build/
+coverage/
+
+# Logs and runtime output
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+hs_err_pid*
+replay_pid*
+
+# IDE and editor metadata
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Maven and Java local artifacts
+.mvn/wrapper/maven-wrapper.jar
+.m2/
+maven_extracted/
+backend/classpath.txt
+
+# Playwright and browser automation artifacts
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# Local probes and generated verification outputs
+integration-probe-results.json
+route-verify-results.json
+*-probe-results.json
+*-verify-results.json
+
+# Scratch and generated extraction workspace
+brain/**/scratch/
+scratch/
+tmp/
+temp/
+.tmp/
+.cache/
+
+# Codex/local tool state
+.codex/
