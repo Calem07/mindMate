@@ -1,0 +1,2 @@
+-- Canonical schema is applied by backend Flyway migrations.
+-- See backend/src/main/resources/db/migration/V1__init.sql.

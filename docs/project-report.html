@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMate 3.0 - Academic Project Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #f0fdfa;
+            --ink: #0f172a;
+            --muted: #475569;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--ink);
+            line-height: 1.65;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        h1, h2, h3, h4 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-top: 1.8em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            font-size: 2.25rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-top: -10px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        h2 {
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            color: #1e293b;
+        }
+        h3 {
+            font-size: 1.2rem;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 1.2em;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 1.2em;
+            padding-left: 20px;
+            color: var(--muted);
+        }
+        li {
+            margin-bottom: 0.4em;
+        }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #0f766e;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5em;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: #f8fafc;
+            font-size: 0.9em;
+        }
+        blockquote {
+            margin: 1.5em 0;
+            padding: 10px 20px;
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            color: var(--primary);
+            font-style: italic;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 2.5em 0;
+        }
+        .actions {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .mermaid {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            .actions {
+                display: none;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            pre, blockquote, tr {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="actions">
+            <button class="btn" onclick="window.print()">💾 Save as PDF / Print Report</button>
+        </div>
+        
+        <h1>MindMate 3.0 Project Report</h1>
+        <div class="subtitle">An Advanced Teen Wellness and Personal Growth Ecosystem</div>
+        
+        <h2>📄 Abstract</h2>
+        <p>Student and teen mental wellness is a critical component of academic success and daily personal growth. <strong>MindMate 3.0</strong> is a comprehensive, gamified wellness platform that combines mental health support, habits building, self-reflection, exam focus intervals, and goal tracking into an engaging client-server application.</p>
+        <p>Crucially, the system balances support with strict safety boundaries: it detects severe distress language to override conversation loops with emergency guidelines, restricts admin moderation view via explicit student privacy consent parameters, and implements a non-clinical companion model. The stack consists of a <strong>React/JSX/JavaScript</strong> frontend styled with <strong>Tailwind CSS</strong>, a <strong>Spring Boot/Security/JPA/Java 17</strong> backend running on port <strong>8088</strong>, and a <strong>PostgreSQL</strong> database managed via <strong>Flyway</strong> schema migrations.</p>
+
+        <h2>1. Introduction</h2>
+        <h3>1.1 Problem Statement</h3>
+        <p>Higher education exposes teenagers to intense academic competition, time-management challenges, and exam stress. Traditional support systems are often slow or inaccessible. While digital AI companions offer potential assistance, they frequently lack safety guardrails, make inappropriate clinical diagnoses, or fail to engage students consistently due to a lack of gamified progression.</p>
+
+        <h3>1.2 Purpose and Scope</h3>
+        <p>MindMate 3.0 bridges this gap by offering a secure, engaging wellness companion. It is designed to:</p>
+        <ul>
+            <li>Monitor daily wellness metrics (mood, energy, stress, sleep, trigger factors).</li>
+            <li>Track positive habit completions with visual streaks.</li>
+            <li>Support examination periods via Pomodoro focus study blocks and countdown cards.</li>
+            <li>Support long-term goal setting and milestones.</li>
+            <li>Encourage consistency using XP levels, achievements, and an animated visual Growth Garden.</li>
+            <li>Provide high-context AI companions that read recent logs to offer custom guidance.</li>
+        </ul>
+
+        <h2>2. Technology Stack & Environment</h2>
+        <p>The application is built using a modern, scalable stack designed to support decoupled development:</p>
+        <h3>2.1 Frontend Stack</h3>
+        <ul>
+            <li><strong>React (v19.2.6)</strong>: Component-based UI rendering.</li>
+            <li><strong>Vite (v8.0.16)</strong>: Next-generation build tool with proxy configurations.</li>
+            <li><strong>JavaScript (ES6+) / JSX</strong>: Clean, standard script files (TypeScript-free).</li>
+            <li><strong>React Router (v7.16.0)</strong>: Declarative client-side routing.</li>
+            <li><strong>Recharts (v3.8.1)</strong>: SVG chart library for data visualization.</li>
+            <li><strong>Tailwind CSS (v4.3.0)</strong>: Utility-first CSS styling framework.</li>
+        </ul>
+        <h3>2.2 Backend Stack</h3>
+        <ul>
+            <li><strong>Java 17 / Spring Boot (v3.4.1)</strong>: Core enterprise framework.</li>
+            <li><strong>Spring Security & JJWT (v0.12.6)</strong>: Stateless JWT-based authentication.</li>
+            <li><strong>Spring Data JPA & Hibernate</strong>: Object-relational mapping (ORM).</li>
+            <li><strong>Flyway Database Migrations</strong>: Relational schema versioning.</li>
+            <li><strong>WebFlux (WebClient)</strong>: Asynchronous, non-blocking HTTP requests for external API integration.</li>
+        </ul>
+
+        <h2>3. System Architecture</h2>
+        <p>The application follows a decoupled client-server architecture. The frontend React application communicates with the Spring Boot backend via a REST API, secured by JWT authentication.</p>
+        
+        <div class="mermaid">
+flowchart TD
+  subgraph Client Layer (React Frontend)
+    Dashboard["Dashboard & Analytics"]
+    CheckIn["Daily Check-In & Triggers"]
+    Habits["Habits Streaker"]
+    Exams["Exam Pomodoro Timer"]
+    Garden["Growth Garden (SVG Tree)"]
+    Chat["AI Chat & Crisis Banner"]
+  end
+
+  subgraph Service Layer (Spring Boot API)
+    JWTFilter["JWT Filter & Auth Service"]
+    TeenService["Teen Wellness Service (XP & Streaks)"]
+    Engine["Correlation Engine (Conditional Statistics)"]
+    Reflect["Reflection Service (AI Summary)"]
+    Gemini["Gemini API Adapter (gemini-2.5-flash)"]
+  end
+
+  subgraph Data Layer (PostgreSQL)
+    DB[("PostgreSQL Database")]
+  end
+
+  Dashboard & CheckIn & Habits & Exams & Garden & Chat -- REST API + JWT --> JWTFilter
+  JWTFilter --> TeenService & Engine & Reflect
+  Reflect & TeenService --> Gemini
+  TeenService & Engine & Reflect --> DB
+        </div>
+
+        <h2>4. Database Design (PostgreSQL Schema)</h2>
+        <p>The database structure consists of tables defined via Flyway migrations:</p>
+        <h3>4.1 Profile Gamification & Streak Extension</h3>
+        <pre><code>ALTER TABLE users ADD COLUMN xp integer NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN level integer NOT NULL DEFAULT 1;
+ALTER TABLE users ADD COLUMN current_streak integer NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN longest_streak integer NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN last_activity_date date;
+ALTER TABLE users ADD COLUMN garden_theme varchar(50) NOT NULL DEFAULT 'CLASSIC';</code></pre>
+
+        <h3>4.2 Daily Wellness Log Table</h3>
+        <pre><code>CREATE TABLE daily_checkins (
+  id bigserial PRIMARY KEY,
+  user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  mood varchar(40) NOT NULL,
+  energy_level integer NOT NULL,
+  stress_level integer NOT NULL,
+  sleep_hours double precision NOT NULL,
+  sleep_quality integer NOT NULL,
+  social_interaction integer NOT NULL,
+  mood_trigger varchar(100),
+  wellness_score integer NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);</code></pre>
+
+        <h3>4.3 Future Me Letters Vault Table</h3>
+        <pre><code>CREATE TABLE future_me_letters (
+  id bigserial PRIMARY KEY,
+  user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  content text NOT NULL,
+  unlock_date date NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);</code></pre>
+
+        <h2>5. Designated Feature Implementation (Code Snippets)</h2>
+        <h3>5.1 High-Context AI Companion Connection</h3>
+        <pre><code>public String chat(String message, String context) {
+    if (apiKey == null || apiKey.isBlank()) {
+      return "I hear you. I can help you make this smaller...";
+    }
+    try {
+      var body = Map.of("contents", new Object[] {
+          Map.of("parts", new Object[] { Map.of("text", safety.systemPrompt() + "\nContext: " + context + "\nStudent message: " + message) })
+      });
+      var response = webClient.post()
+          .uri("/v1beta/models/{model}:generateContent?key={key}", model, apiKey)
+          .bodyValue(body)
+          .retrieve()
+          .bodyToMono(Map.class)
+          .block();
+      
+      // Safe extraction of the candidate text block
+      return parseTextFromResponse(response);
+    } catch (RuntimeException ex) {
+      return "I could not reach the AI provider, but I can still suggest a small reset...";
+    }
+}</code></pre>
+
+        <h3>5.2 Wellness Correlation Engine</h3>
+        <pre><code>public List&lt;CorrelationResponse&gt; getCorrelations(User user) {
+    List&lt;DailyCheckin&gt; logs = checkins.findByUserOrderByCreatedAtDesc(user);
+    List&lt;CorrelationResponse&gt; correlations = new ArrayList&lt;&gt;();
+    
+    // Evaluate Mood Score conditional averages vs Sleep Hours
+    double highSleepAvgMood = 0; int highSleepCount = 0;
+    double lowSleepAvgMood = 0; int lowSleepCount = 0;
+    
+    for (DailyCheckin c : logs) {
+      int score = getMoodScore(c.getMood());
+      if (c.getSleepHours() &gt;= 7.5) {
+        highSleepAvgMood += score; highSleepCount++;
+      } else {
+        lowSleepAvgMood += score; lowSleepCount++;
+      }
+    }
+    
+    if (highSleepCount &gt; 0 && lowSleepCount &gt; 0) {
+      double diff = (highSleepAvgMood / highSleepCount) - (lowSleepAvgMood / lowSleepCount);
+      if (diff &gt; 5) {
+        correlations.add(new CorrelationResponse("Sleep Hours", "Mood Score", 
+            String.format("You score %.1f%% happier on days with 7.5+ sleep hours.", diff)));
+      }
+    }
+    return correlations;
+}</code></pre>
+
+        <h2>6. Verification & Test Strategy</h2>
+        <p>Automated tests check the business logic. We execute Maven tests to ensure everything is correct:</p>
+        <pre><code>class TeenWellnessServiceTest {
+  @Test
+  void testAddXpLevelProgression() {
+    service.addXp(testUser, 150);
+    assertThat(testUser.getXp()).isEqualTo(150);
+    assertThat(testUser.getLevel()).isEqualTo(2);
+  }
+
+  @Test
+  void testBurnoutRiskTriggered() {
+    when(checkins.findByUserOrderByCreatedAtDesc(testUser)).thenReturn(historyLogs);
+    BurnoutCheckResponse res = service.checkBurnoutRisk(testUser);
+    assertThat(res.burnoutRisk()).isTrue();
+    assertThat(res.suggestion()).contains("High Burnout Risk");
+  }
+}</code></pre>
+    </div>
+</body>
+</html>
