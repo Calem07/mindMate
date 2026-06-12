@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import {
   ArrowRight,
   BookMarked,
+  ChevronRight,
   GraduationCap,
   Heart,
   MessageCircle,
