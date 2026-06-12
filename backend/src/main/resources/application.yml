@@ -30,6 +30,7 @@ mindmate:
   gemini-api-key: ${GEMINI_API_KEY:}
   gemini-model: ${GEMINI_MODEL:gemini-2.5-pro}
   app-env: ${APP_ENV:dev}
+  allow-demo-users: ${ALLOW_DEMO_USERS:false}
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:*,http://127.0.0.1:*}
   sentry-dsn: ${SENTRY_DSN:}
 
