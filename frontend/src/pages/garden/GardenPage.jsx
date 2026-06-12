@@ -4,7 +4,7 @@ import { LoadingState } from '../../components/ui/LoadingState.jsx';
 import { gardenService } from '../../services/index.js';
 
 /** Approved Figma Growth Garden + gamification APIs. */
-export function GardenPage({ pet, gardenTheme = 'forest', changeTheme }) {
+export function GardenPage({ pet, gardenTheme = 'classic', changeTheme }) {
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,9 +37,12 @@ export function GardenPage({ pet, gardenTheme = 'forest', changeTheme }) {
     <FigmaGrowthGardenView
       gardenTheme={theme}
       onThemeChange={handleTheme}
-      level={progress?.level ?? pet?.level ?? 8}
+      level={progress?.level ?? pet?.level ?? 1}
       petName={pet?.name || 'Luna'}
-      petLevel={pet?.level ?? 12}
+      petLevel={pet?.level ?? progress?.level ?? 1}
+      progress={progress}
+      unlockedThemes={pet?.unlockedThemes || ['Classic']}
+      unlockedAccessories={pet?.unlockedAccessories || []}
     />
   );
 }

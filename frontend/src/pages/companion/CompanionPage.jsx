@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FigmaCompanionView } from '../../components/figma/companion/FigmaCompanionView.jsx';
 import { LoadingState } from '../../components/ui/LoadingState.jsx';
-import { companionService } from '../../services/index.js';
+import { companionService, gardenService } from '../../services/index.js';
 
 /**
  * Approved Figma AI Companion screen + live chat API.
@@ -9,15 +9,17 @@ import { companionService } from '../../services/index.js';
  */
 export function CompanionPage({ pet, refreshKey = 0, triggerRefresh }) {
   const [history, setHistory] = useState([]);
+  const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    companionService
-      .history()
-      .then((data) => {
-        if (!cancelled) setHistory(data || []);
+    Promise.all([companionService.history(), gardenService.progress()])
+      .then(([messages, prog]) => {
+        if (cancelled) return;
+        setHistory(messages || []);
+        setProgress(prog);
       })
       .catch(console.error)
       .finally(() => {
@@ -65,10 +67,12 @@ export function CompanionPage({ pet, refreshKey = 0, triggerRefresh }) {
   return (
     <FigmaCompanionView
       petName={pet?.name || 'Luna'}
-      level={pet?.level ?? 12}
-      bondPct={pet?.petXp ? Math.round(((pet.petXp % 250) / 250) * 100) : 82}
+      level={pet?.level ?? progress?.level ?? 1}
+      bondPct={pet?.petXp ? Math.round(((pet.petXp % 250) / 250) * 100) : 0}
       messages={history}
       onSendMessage={sendMessage}
+      progress={progress}
+      companion={pet}
     />
   );
 }

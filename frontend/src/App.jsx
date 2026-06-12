@@ -605,7 +605,7 @@ function AppShell({ role, setRole, themeMode, setThemeMode }) {
 function OnboardingPage({ setPet }) {
   const [companions, setCompanions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState('');
+  const [name, setName] = useState('Luna');
   const [selectedIdx, setSelectedIdx] = useState(0);
 
   useEffect(() => {
@@ -623,9 +623,10 @@ function OnboardingPage({ setPet }) {
   const choose = () => {
     if (!name.trim() || companions.length === 0) return;
     const item = companions[selectedIdx];
+    const companionName = name.trim();
     const newPetRequest = {
       petType: item.petType,
-      petName: name,
+      petName: companionName,
       petTheme: 'Classic',
       petAccessory: 'None'
     };
@@ -695,7 +696,14 @@ function OnboardingPage({ setPet }) {
 
       <div className="max-w-md mx-auto flex flex-col gap-3">
         <input className="input text-center font-semibold text-sm py-1.5" placeholder="Name your companion..." value={name} onChange={e => setName(e.target.value)} required />
-        <button onClick={choose} className="btn btn-primary justify-center font-bold text-xs py-2.5">Adopt Companion</button>
+        <p className="text-[11px] text-slate-500">You can keep Luna or choose your own companion name.</p>
+        <button
+          onClick={choose}
+          disabled={!name.trim()}
+          className={`btn btn-primary justify-center font-bold text-xs py-2.5 ${!name.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          Adopt {name.trim() || 'Companion'}
+        </button>
       </div>
     </section>
   );
