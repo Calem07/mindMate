@@ -144,22 +144,7 @@ public class TeenWellnessService {
     checkin.setSocialInteraction(req.socialInteraction());
     checkin.setMoodTrigger(req.moodTrigger());
 
-    // Calculate wellness score 0 to 100
-    int moodVal = switch (req.mood().toUpperCase()) {
-      case "EXCELLENT" -> 100;
-      case "GOOD" -> 80;
-      case "NEUTRAL" -> 60;
-      case "STRESSED" -> 40;
-      case "SAD" -> 20;
-      default -> 60;
-    };
-    int stressFactor = (6 - req.stressLevel()) * 20; // Lower stress = higher score
-    int energyFactor = req.energyLevel() * 20;
-    int sleepFactor = (int) Math.min(req.sleepHours() * 12.5, 100.0);
-    int qualityFactor = req.sleepQuality() * 20;
-    int socialFactor = req.socialInteraction() * 20;
-
-    int wellnessScore = (moodVal + stressFactor + energyFactor + sleepFactor + qualityFactor + socialFactor) / 6;
+    int wellnessScore = calculateWellnessScore(req);
     checkin.setWellnessScore(Math.max(0, Math.min(100, wellnessScore)));
 
     checkins.save(checkin);
@@ -167,11 +152,10 @@ public class TeenWellnessService {
     addXp(user, 5);
     addPetXp(user, 20);
 
-    String checkinDesc = String.format("Mood: %s, Sleep: %.1f hrs, Stress: %d/5",
-        req.mood(), req.sleepHours(), req.stressLevel());
+    String checkinDesc = checkinDescription(req);
     addMemory(user, "CHECKIN", "Completed Daily Check-in", checkinDesc);
 
-    if (req.sleepHours() >= 8.0 && req.sleepQuality() >= 4) {
+    if (req.sleepHours() != null && req.sleepQuality() != null && req.sleepHours() >= 8.0 && req.sleepQuality() >= 4) {
       addMemory(user, "CHECKIN", "Reported improved sleep quality", "Reported improved sleep quality with " + req.sleepHours() + " hours of sleep.");
     }
 
@@ -180,12 +164,14 @@ public class TeenWellnessService {
     if (checkinCount >= 5) {
       checkAndEarnBadge(user, "Wellness Warrior");
     }
-    if (req.sleepHours() >= 8.0 && req.sleepQuality() >= 4) {
+    if (req.sleepHours() != null && req.sleepQuality() != null && req.sleepHours() >= 8.0 && req.sleepQuality() >= 4) {
       checkAndEarnBadge(user, "Sleep Champion");
     }
 
     // Challenge check
-    updateChallengeProgress(user, "SLEEP_CONSISTENCY", req.sleepHours() >= 8.0 ? 1 : 0);
+    if (req.sleepHours() != null) {
+      updateChallengeProgress(user, "SLEEP_CONSISTENCY", req.sleepHours() >= 8.0 ? 1 : 0);
+    }
     updateChallengeProgress(user, "MOOD_TRACKING", 1);
 
     return toCheckinResponse(checkin);
@@ -484,8 +470,8 @@ public class TeenWellnessService {
 
     // Check last 3 logs
     List<DailyCheckin> recent = history.stream().limit(3).toList();
-    long highStressCount = recent.stream().filter(c -> c.getStressLevel() >= 4).count();
-    long lowSleepCount = recent.stream().filter(c -> c.getSleepHours() < 6.0).count();
+    long highStressCount = recent.stream().filter(c -> c.getStressLevel() != null && c.getStressLevel() >= 4).count();
+    long lowSleepCount = recent.stream().filter(c -> c.getSleepHours() != null && c.getSleepHours() < 6.0).count();
     long negativeMoodCount = recent.stream().filter(c -> c.getMood().equalsIgnoreCase("SAD") || c.getMood().equalsIgnoreCase("STRESSED")).count();
 
     if (highStressCount >= 2 && lowSleepCount >= 2) {
@@ -505,6 +491,48 @@ public class TeenWellnessService {
         c.getSleepHours(), c.getSleepQuality(), c.getSocialInteraction(),
         c.getMoodTrigger(), c.getWellnessScore(), c.getCreatedAt()
     );
+  }
+
+  private int calculateWellnessScore(DailyCheckinRequest req) {
+    List<Integer> factors = new ArrayList<>();
+    factors.add(switch (req.mood().toUpperCase()) {
+      case "EXCELLENT" -> 100;
+      case "GOOD" -> 80;
+      case "NEUTRAL" -> 60;
+      case "STRESSED" -> 40;
+      case "SAD" -> 20;
+      default -> 60;
+    });
+    factors.add(req.energyLevel() * 20);
+    if (req.stressLevel() != null) {
+      factors.add((6 - req.stressLevel()) * 20);
+    }
+    if (req.sleepHours() != null) {
+      factors.add((int) Math.min(req.sleepHours() * 12.5, 100.0));
+    }
+    if (req.sleepQuality() != null) {
+      factors.add(req.sleepQuality() * 20);
+    }
+    if (req.socialInteraction() != null) {
+      factors.add(req.socialInteraction() * 20);
+    }
+    return (int) factors.stream().mapToInt(Integer::intValue).average().orElse(60);
+  }
+
+  private String checkinDescription(DailyCheckinRequest req) {
+    List<String> parts = new ArrayList<>();
+    parts.add("Mood: " + req.mood());
+    parts.add("Energy: " + req.energyLevel() + "/5");
+    if (req.sleepHours() != null) {
+      parts.add(String.format("Sleep: %.1f hrs", req.sleepHours()));
+    }
+    if (req.stressLevel() != null) {
+      parts.add("Stress: " + req.stressLevel() + "/5");
+    }
+    if (req.moodTrigger() != null && !req.moodTrigger().isBlank()) {
+      parts.add("Trigger: " + req.moodTrigger());
+    }
+    return String.join(", ", parts);
   }
 
   private LifeGoalResponse toGoalResponse(LifeGoal g) {
@@ -651,12 +679,12 @@ public class TeenWellnessService {
     DailyCheckin latestCheckin = checkinList.isEmpty() ? null : checkinList.get(0);
 
     // 1. CONCERNED: Stress level >= 4
-    if (latestCheckin != null && latestCheckin.getStressLevel() >= 4) {
+    if (latestCheckin != null && latestCheckin.getStressLevel() != null && latestCheckin.getStressLevel() >= 4) {
       return "CONCERNED";
     }
 
     // 2. SLEEPY: Sleep < 6.0
-    if (latestCheckin != null && latestCheckin.getSleepHours() < 6.0) {
+    if (latestCheckin != null && latestCheckin.getSleepHours() != null && latestCheckin.getSleepHours() < 6.0) {
       return "SLEEPY";
     }
 
@@ -725,10 +753,10 @@ public class TeenWellnessService {
     List<DailyCheckin> checkinList = checkins.findByUserOrderByCreatedAtDesc(user);
     DailyCheckin latestCheckin = checkinList.isEmpty() ? null : checkinList.get(0);
     if (latestCheckin != null) {
-      if (latestCheckin.getStressLevel() >= 4) {
+      if (latestCheckin.getStressLevel() != null && latestCheckin.getStressLevel() >= 4) {
         return String.format("%s noticed you're feeling a bit stressed. Let's take a 10-minute break together.", petName);
       }
-      if (latestCheckin.getSleepHours() < 6.0) {
+      if (latestCheckin.getSleepHours() != null && latestCheckin.getSleepHours() < 6.0) {
         return String.format("%s noticed you got only %.1f hours of sleep last night. Prioritize resting early tonight!", petName, latestCheckin.getSleepHours());
       }
     }

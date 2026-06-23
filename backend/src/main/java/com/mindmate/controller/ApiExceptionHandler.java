@@ -3,6 +3,7 @@ package com.mindmate.controller;
 import com.mindmate.observability.SentryHooks;
 import java.util.Map;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,12 @@ public class ApiExceptionHandler {
   @ExceptionHandler({IllegalArgumentException.class})
   ResponseEntity<Map<String, String>> badRequest(RuntimeException ex) {
     return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+  }
+
+  @ExceptionHandler({DataIntegrityViolationException.class})
+  ResponseEntity<Map<String, String>> conflict(DataIntegrityViolationException ex) {
+    sentry.captureException(ex);
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Request conflicts with existing data"));
   }
 
   @ExceptionHandler({RuntimeException.class})

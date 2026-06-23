@@ -27,17 +27,25 @@ public class AuthService {
   }
 
   public AuthResponse register(RegisterRequest request) {
-    users.findByEmail(request.email()).ifPresent(user -> { throw new IllegalArgumentException("Email is already registered"); });
+    String email = request.email().trim().toLowerCase();
+    users.findByEmail(email).ifPresent(user -> { throw new IllegalArgumentException("Email is already registered"); });
     var user = new User();
-    user.setName(request.name());
-    user.setEmail(request.email().toLowerCase());
+    user.setName(request.name().trim());
+    user.setEmail(email);
     user.setPasswordHash(passwordEncoder.encode(request.password()));
+    user.setXp(0);
+    user.setLevel(1);
+    user.setCurrentStreak(0);
+    user.setLongestStreak(0);
+    user.setGardenTheme("CLASSIC");
+    user.setPetXp(0);
+    user.setHasSelectedCompanion(false);
     users.save(user);
     return authResponse(user);
   }
 
   public AuthResponse login(LoginRequest request) {
-    var user = users.findByEmail(request.email().toLowerCase())
+    var user = users.findByEmail(request.email().trim().toLowerCase())
         .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
     if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
       throw new UnauthorizedException("Invalid credentials");

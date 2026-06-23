@@ -106,8 +106,11 @@ public class WellnessService {
         var recentCheckins = checkins.findByUserOrderByCreatedAtDesc(user);
         if (!recentCheckins.isEmpty()) {
           var c = recentCheckins.get(0);
-          contextStr = String.format("{\"recent_mood\": \"%s\", \"sleep_hours\": %.1f, \"stress_level\": %d, \"energy_level\": %d}",
-              c.getMood(), c.getSleepHours(), c.getStressLevel(), c.getEnergyLevel());
+          contextStr = String.format("{\"recent_mood\": \"%s\", \"sleep_hours\": %s, \"stress_level\": %s, \"energy_level\": %d}",
+              c.getMood(),
+              c.getSleepHours() == null ? "null" : String.format("%.1f", c.getSleepHours()),
+              c.getStressLevel() == null ? "null" : c.getStressLevel().toString(),
+              c.getEnergyLevel());
         }
       } catch (Exception e) {}
       

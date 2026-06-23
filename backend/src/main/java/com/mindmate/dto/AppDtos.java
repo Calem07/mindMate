@@ -33,14 +33,14 @@ public final class AppDtos {
   // Teen Wellness 2.0 & 3.0 records
   public record DailyCheckinRequest(
       @NotBlank @Pattern(regexp = "EXCELLENT|GOOD|NEUTRAL|STRESSED|SAD") String mood,
-      @Min(1) @Max(5) int energyLevel,
-      @Min(1) @Max(5) int stressLevel,
-      @DecimalMin("0.0") @DecimalMax("24.0") double sleepHours,
-      @Min(1) @Max(5) int sleepQuality,
-      @Min(1) @Max(5) int socialInteraction,
+      @NotNull @Min(1) @Max(5) Integer energyLevel,
+      @Min(1) @Max(5) Integer stressLevel,
+      @DecimalMin("0.0") @DecimalMax("24.0") Double sleepHours,
+      @Min(1) @Max(5) Integer sleepQuality,
+      @Min(1) @Max(5) Integer socialInteraction,
       @Size(max = 100) String moodTrigger
   ) {}
-  public record DailyCheckinResponse(Long id, String mood, int energyLevel, int stressLevel, double sleepHours, int sleepQuality, int socialInteraction, String moodTrigger, int wellnessScore, Instant createdAt) {}
+  public record DailyCheckinResponse(Long id, String mood, int energyLevel, Integer stressLevel, Double sleepHours, Integer sleepQuality, Integer socialInteraction, String moodTrigger, int wellnessScore, Instant createdAt) {}
   
   public record GratitudeRequest(@NotBlank @Size(max = 4000) String happyMoment, @NotBlank @Size(max = 4000) String gratefulFor, @NotBlank @Size(max = 4000) String proudAchievement) {}
   public record GratitudeResponse(Long id, String happyMoment, String gratefulFor, String proudAchievement, Instant createdAt) {}

@@ -35,13 +35,24 @@ public class ReflectionService {
     }
 
     int checkinDays = Math.min(logs.size(), 7);
-    double avgSleep = logs.stream().limit(checkinDays).mapToDouble(DailyCheckin::getSleepHours).average().orElse(0.0);
-    double avgStress = logs.stream().limit(checkinDays).mapToLong(DailyCheckin::getStressLevel).average().orElse(0.0);
+    double avgSleep = logs.stream()
+        .limit(checkinDays)
+        .map(DailyCheckin::getSleepHours)
+        .filter(value -> value != null)
+        .mapToDouble(Double::doubleValue)
+        .average()
+        .orElse(Double.NaN);
+    double avgStress = logs.stream()
+        .limit(checkinDays)
+        .map(DailyCheckin::getStressLevel)
+        .filter(value -> value != null)
+        .mapToInt(Integer::intValue)
+        .average()
+        .orElse(Double.NaN);
 
-    String statsSummary = String.format(
-        "Student Stats this week: Logged %d days, Average sleep duration: %.1f hours, Average stress level: %.1f/5.",
-        checkinDays, avgSleep, avgStress
-    );
+    String sleepSummary = Double.isNaN(avgSleep) ? "Average sleep duration: not logged" : String.format("Average sleep duration: %.1f hours", avgSleep);
+    String stressSummary = Double.isNaN(avgStress) ? "Average stress level: not logged" : String.format("Average stress level: %.1f/5", avgStress);
+    String statsSummary = String.format("Student Stats this week: Logged %d days, %s, %s.", checkinDays, sleepSummary, stressSummary);
 
     // Call Gemini with stats context or return local fallback
     String aiPrompt = statsSummary + "\nProvide a friendly, motivational academic weekly reflection for a teenager under 100 words. Do not make medical claims.";
@@ -55,11 +66,17 @@ public class ReflectionService {
     // Fallback
     StringBuilder sb = new StringBuilder();
     sb.append(String.format("Great effort this week! You completed %d wellness check-ins. ", checkinDays));
-    sb.append(String.format("Your average sleep was %.1f hours with an academic stress level of %.1f/5. ", avgSleep, avgStress));
-    if (avgSleep < 7.0) {
-      sb.append("Try setting a screen wind-down alarm 30 minutes before sleep to hit your 8-hour target.");
+    if (!Double.isNaN(avgSleep) && !Double.isNaN(avgStress)) {
+      sb.append(String.format("Your average sleep was %.1f hours with an academic stress level of %.1f/5. ", avgSleep, avgStress));
     } else {
+      sb.append("Some optional wellness details were not logged, so I focused on the check-ins you did complete. ");
+    }
+    if (!Double.isNaN(avgSleep) && avgSleep < 7.0) {
+      sb.append("Try setting a screen wind-down alarm 30 minutes before sleep to hit your 8-hour target.");
+    } else if (!Double.isNaN(avgSleep)) {
       sb.append("You are maintaining excellent sleep habits, keep it up to boost memory and focus!");
+    } else {
+      sb.append("Keep using check-ins consistently; patterns get clearer as you share more detail.");
     }
     return sb.toString();
   }

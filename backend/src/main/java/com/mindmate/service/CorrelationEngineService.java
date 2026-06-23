@@ -45,6 +45,9 @@ public class CorrelationEngineService {
     int lowSleepCount = 0;
 
     for (DailyCheckin c : logs) {
+      if (c.getSleepHours() == null) {
+        continue;
+      }
       int score = getMoodScore(c.getMood());
       if (c.getSleepHours() >= 7.5) {
         highSleepAvgMood += score;
@@ -70,6 +73,9 @@ public class CorrelationEngineService {
     int lowSocialCount = 0;
 
     for (DailyCheckin c : logs) {
+      if (c.getSocialInteraction() == null || c.getStressLevel() == null) {
+        continue;
+      }
       if (c.getSocialInteraction() >= 4) {
         highSocialStress += c.getStressLevel();
         highSocialCount++;
@@ -129,7 +135,7 @@ public class CorrelationEngineService {
       correlations.add(new CorrelationResponse(
           "Stable Routine",
           "Balanced Indicators",
-          "No extreme variance detected. Your indicators (sleep, social interaction, habits) represent a balanced routine."
+          "No strong pattern is available yet. Missing sleep, stress, or social values are excluded from correlation calculations."
       ));
     }
 

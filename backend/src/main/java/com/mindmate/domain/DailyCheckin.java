@@ -19,17 +19,17 @@ public class DailyCheckin {
   @Column(name = "energy_level", nullable = false)
   private int energyLevel;
 
-  @Column(name = "stress_level", nullable = false)
-  private int stressLevel;
+  @Column(name = "stress_level")
+  private Integer stressLevel;
 
-  @Column(name = "sleep_hours", nullable = false)
-  private double sleepHours;
+  @Column(name = "sleep_hours")
+  private Double sleepHours;
 
-  @Column(name = "sleep_quality", nullable = false)
-  private int sleepQuality;
+  @Column(name = "sleep_quality")
+  private Integer sleepQuality;
 
-  @Column(name = "social_interaction", nullable = false)
-  private int socialInteraction;
+  @Column(name = "social_interaction")
+  private Integer socialInteraction;
 
   @Column(name = "mood_trigger")
   private String moodTrigger;
@@ -47,14 +47,14 @@ public class DailyCheckin {
   public void setMood(String mood) { this.mood = mood; }
   public int getEnergyLevel() { return energyLevel; }
   public void setEnergyLevel(int energyLevel) { this.energyLevel = energyLevel; }
-  public int getStressLevel() { return stressLevel; }
-  public void setStressLevel(int stressLevel) { this.stressLevel = stressLevel; }
-  public double getSleepHours() { return sleepHours; }
-  public void setSleepHours(double sleepHours) { this.sleepHours = sleepHours; }
-  public int getSleepQuality() { return sleepQuality; }
-  public void setSleepQuality(int sleepQuality) { this.sleepQuality = sleepQuality; }
-  public int getSocialInteraction() { return socialInteraction; }
-  public void setSocialInteraction(int socialInteraction) { this.socialInteraction = socialInteraction; }
+  public Integer getStressLevel() { return stressLevel; }
+  public void setStressLevel(Integer stressLevel) { this.stressLevel = stressLevel; }
+  public Double getSleepHours() { return sleepHours; }
+  public void setSleepHours(Double sleepHours) { this.sleepHours = sleepHours; }
+  public Integer getSleepQuality() { return sleepQuality; }
+  public void setSleepQuality(Integer sleepQuality) { this.sleepQuality = sleepQuality; }
+  public Integer getSocialInteraction() { return socialInteraction; }
+  public void setSocialInteraction(Integer socialInteraction) { this.socialInteraction = socialInteraction; }
   public String getMoodTrigger() { return moodTrigger; }
   public void setMoodTrigger(String moodTrigger) { this.moodTrigger = moodTrigger; }
   public int getWellnessScore() { return wellnessScore; }

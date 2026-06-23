@@ -71,9 +71,9 @@ public class SecurityConfig {
   }
 
   @Bean
-  CorsConfigurationSource corsConfigurationSource(@Value("${mindmate.allowed-origins:http://localhost:*,http://127.0.0.1:*}") String allowedOrigins) {
+  CorsConfigurationSource corsConfigurationSource(@Value("${mindmate.allowed-origins:http://localhost:5177,http://127.0.0.1:5177,https://mind-mate-tan-phi.vercel.app}") String allowedOrigins) {
     var config = new CorsConfiguration();
-    config.setAllowedOriginPatterns(Arrays.stream(allowedOrigins.split(","))
+    config.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
         .map(String::trim)
         .filter(origin -> !origin.isBlank())
         .toList());

@@ -6,10 +6,12 @@ import static org.mockito.Mockito.*;
 import com.mindmate.domain.DailyCheckin;
 import com.mindmate.domain.User;
 import com.mindmate.dto.AppDtos.BurnoutCheckResponse;
+import com.mindmate.dto.AppDtos.DailyCheckinRequest;
 import com.mindmate.repository.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.mockito.ArgumentCaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -96,5 +98,34 @@ class TeenWellnessServiceTest {
     BurnoutCheckResponse res = service.checkBurnoutRisk(testUser);
     assertThat(res.burnoutRisk()).isTrue();
     assertThat(res.suggestion()).contains("High Burnout Risk");
+  }
+
+  @Test
+  void logCheckinAllowsLovablePayloadWithoutOptionalWellnessFields() {
+    when(challenges.findByUser(testUser)).thenReturn(Collections.emptyList());
+    when(checkins.findByUserOrderByCreatedAtDesc(testUser)).thenReturn(List.of(new DailyCheckin()));
+
+    DailyCheckinRequest request = new DailyCheckinRequest(
+        "GOOD",
+        4,
+        null,
+        null,
+        null,
+        null,
+        "Focused, Codex E2E check-in"
+    );
+
+    service.logCheckin(testUser, request);
+
+    ArgumentCaptor<DailyCheckin> captor = ArgumentCaptor.forClass(DailyCheckin.class);
+    verify(checkins).save(captor.capture());
+    DailyCheckin saved = captor.getValue();
+    assertThat(saved.getMood()).isEqualTo("GOOD");
+    assertThat(saved.getEnergyLevel()).isEqualTo(4);
+    assertThat(saved.getStressLevel()).isNull();
+    assertThat(saved.getSleepHours()).isNull();
+    assertThat(saved.getSleepQuality()).isNull();
+    assertThat(saved.getSocialInteraction()).isNull();
+    assertThat(saved.getWellnessScore()).isBetween(0, 100);
   }
 }
